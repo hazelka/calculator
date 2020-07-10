@@ -27,21 +27,23 @@ class Converter extends React.Component {
 	};
 
 	handleFromChange = amount => {
-		if (!amount || !/[^\d\.]/.test(amount))  {
+		if (!amount || /^\d+\.?\d*$/.test(amount)) {
 			this.setState({
-				fromAmount: amount ? amount : "0",
+				fromAmount: amount ? amount.replace(/^0(?=\d)/, "") : "0",
 				toAmount: (amount * this.state.rate).toFixed(4)
 			});
 		}
+		console.log(amount);
 	};
 
 	handleToChange = amount => {
-		if (!amount || !/[^\d\.]/.test(amount)) {
+		if (!amount || /^\d+\.?\d*$/.test(amount)) {
 			this.setState({
 				fromAmount: (amount / this.state.rate).toFixed(4),
-				toAmount: amount ? amount : "0"
+				toAmount: amount ? amount.replace(/^0(?=\d)/, "") : "0"
 			});
 		}
+		console.log(amount);
 	};
 
 	getExchangeRate = (currency, from) => {
@@ -74,7 +76,7 @@ class Converter extends React.Component {
 				<input
 					className="currency value" 
 					value={this.state.fromSymbol + " " + this.state.fromAmount} 
-					onChange={e => this.handleFromChange(e.target.value.replace(/.\s/, ""))}/>
+					onChange={e => this.handleFromChange(e.target.value.replace(/.+\s/, ""))}/>
 				<select
 					className="currency"  
 					onChange={e => this.getExchangeRate(e.target.value, true)}>
@@ -87,7 +89,7 @@ class Converter extends React.Component {
 				<input 
 					className="currency value" 
 					value={this.state.toSymbol + " " + this.state.toAmount} 
-					onChange={e => this.handleToChange(e.target.value.replace(/.\s/, ""))}/>
+					onChange={e => this.handleToChange(e.target.value.replace(/.+\s/, ""))}/>
 				<select
 					className="currency"  
 					onChange={e => this.getExchangeRate(e.target.value, false)}>
